@@ -5,13 +5,5 @@ class WebhookException(BaseHerokuNotificationException):
     pass
 
 
-class SecretException(WebhookException):
-    pass
-
-
-class SecretNotProvidedException(SecretException):
-    pass
-
-
-class SecretMismatchException(SecretException):
+class SecretMismatchException(WebhookException):
     pass
