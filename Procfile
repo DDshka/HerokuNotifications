@@ -1,0 +1,1 @@
+web: gunicorn heroku_notifications.wsgi:application
