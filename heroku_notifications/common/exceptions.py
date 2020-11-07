@@ -1,0 +1,2 @@
+class BaseHerokuNotificationException(Exception):
+    pass
