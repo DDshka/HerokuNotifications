@@ -14,9 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import re_path, include
-
+from django.urls import include, path
 
 urlpatterns = [
-    re_path('^webhooks/', include('heroku_notifications.webhooks.urls')),
+    path('config/', include('heroku_notifications.config.urls')),
+    path('health/', include('heroku_notifications.healthcheck.urls')),
+    path('webhooks/', include('heroku_notifications.webhooks.urls')),
 ]

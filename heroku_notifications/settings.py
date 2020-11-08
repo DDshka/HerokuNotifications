@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'heroku_notifications.config',
+    'heroku_notifications.healthcheck',
     'heroku_notifications.webhooks',
 ]
 
