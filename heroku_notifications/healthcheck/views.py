@@ -2,9 +2,6 @@ from http import HTTPStatus
 
 from django.http import HttpResponse
 from django.views.generic.base import View
-from pydantic import ValidationError
-
-from heroku_notifications.config.dtos import ConfigDto
 
 
 class PingView(View):

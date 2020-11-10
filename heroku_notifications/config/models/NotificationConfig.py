@@ -10,7 +10,6 @@ class NotificationConfig(UUIDModel):
     class ProvidersEnum(ChoiceEnum):
         pass
 
-
     provider_name = models.CharField(max_length=128, choices=ProvidersEnum.to_choices())
     provider_args = models.JSONField(null=True)
 
@@ -32,33 +31,33 @@ class NotificationConfig(UUIDModel):
 
     # https://devcenter.heroku.com/articles/app-webhooks#step-2-determine-which-events-to-subscribe-to
     HerokuEntitiesToEventsMapping = {
-        HerokuEntitiesEnum.AddonAttachment.value: (
-            HerokuEventTypesEnum.Create.value,
-            HerokuEventTypesEnum.Destroy.value
+        HerokuEntitiesEnum.AddonAttachment: (
+            HerokuEventTypesEnum.Create,
+            HerokuEventTypesEnum.Destroy
         ),
-        HerokuEntitiesEnum.Addon.value: (
-            HerokuEventTypesEnum.Create.value,
-            HerokuEventTypesEnum.Destroy.value,
-            HerokuEventTypesEnum.Update.value,
+        HerokuEntitiesEnum.Addon: (
+            HerokuEventTypesEnum.Create,
+            HerokuEventTypesEnum.Destroy,
+            HerokuEventTypesEnum.Update,
         ),
-        HerokuEntitiesEnum.App.value: (
-            HerokuEventTypesEnum.Create.value,
-            HerokuEventTypesEnum.Destroy.value,
-            HerokuEventTypesEnum.Update.value,
+        HerokuEntitiesEnum.App: (
+            HerokuEventTypesEnum.Create,
+            HerokuEventTypesEnum.Destroy,
+            HerokuEventTypesEnum.Update,
         ),
-        HerokuEntitiesEnum.Build.value: (
-            HerokuEventTypesEnum.Create.value,
-            HerokuEventTypesEnum.Update.value,
+        HerokuEntitiesEnum.Build: (
+            HerokuEventTypesEnum.Create,
+            HerokuEventTypesEnum.Update,
         ),
-        HerokuEntitiesEnum.Dyno.value: (
-            HerokuEventTypesEnum.Create.value,
+        HerokuEntitiesEnum.Dyno: (
+            HerokuEventTypesEnum.Create,
         ),
-        HerokuEntitiesEnum.Formation.value: (
-            HerokuEventTypesEnum.Destroy.value,
-            HerokuEventTypesEnum.Update.value,
+        HerokuEntitiesEnum.Formation: (
+            HerokuEventTypesEnum.Destroy,
+            HerokuEventTypesEnum.Update,
         ),
         HerokuEntitiesEnum.Release.value: (
-            HerokuEventTypesEnum.Create.value,
-            HerokuEventTypesEnum.Update.value,
+            HerokuEventTypesEnum.Create,
+            HerokuEventTypesEnum.Update,
         ),
     }
