@@ -18,21 +18,21 @@ class Entity(BaseModel):
     def remove_duplicates(cls, events: List[str]):
         return list(set(events))
 
-    @validator('events')
-    def validate_events(cls, events: List[str], values, **kwargs):
-        entity_name = values['name']
-        possible_events_set = set(NotificationConfig.HerokuEntitiesToEventsMapping[entity_name])
+    @validator('events', each_item=True)
+    def validate_events(cls, event: NotificationConfig.HerokuEventTypesEnum, values, **kwargs):
+        entity_name = values.get('name')
+        if not entity_name:
+            return event
 
-        unexpected_events = set(events).difference(possible_events_set)
-        if unexpected_events:
-            possible_events_names_str = ', '.join(event.value for event in possible_events_set)
-            unexpected_events_str = ', '.join(event.value for event in unexpected_events)
+        possible_events = NotificationConfig.HerokuEntitiesToEventsMapping.get(entity_name)
+        if event not in possible_events:
+            possible_events_names_str = ', '.join(event.value for event in possible_events)
             raise ValueError(
-                f'Unexpected entity types ({unexpected_events_str}) specified. '
+                f'Unexpected entity type ({event}) specified. '
                 f'Allowed options are: {possible_events_names_str}'
             )
 
-        return events
+        return event
 
 
 class WebhookDto(BaseModel):
@@ -95,7 +95,7 @@ class ConfigDto(BaseModel):
     providers: Dict[str, ProviderDto]
     webhooks: conlist(WebhookDto, min_items=1)
 
-    @root_validator
+    @root_validator(skip_on_failure=True)
     def validate_providers(cls, data):
         provider_names = data.get('providers').keys()
         for webhook_config in data.get('webhooks'):

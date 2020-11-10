@@ -15,7 +15,7 @@ class NotificationConfig(UUIDModel):
 
     secret = models.CharField(max_length=1024, unique=True)
 
-    class HerokuEntitiesEnum(Enum):
+    class HerokuEntitiesEnum(str, Enum):
         AddonAttachment = 'api:addon-attachment'
         Addon = 'api:addon'
         App = 'api:app'
@@ -24,7 +24,7 @@ class NotificationConfig(UUIDModel):
         Formation = 'api:formation'
         Release = 'api:release'
 
-    class HerokuEventTypesEnum(Enum):
+    class HerokuEventTypesEnum(str, Enum):
         Create = 'create'
         Update = 'update'
         Destroy = 'destroy'
@@ -56,7 +56,7 @@ class NotificationConfig(UUIDModel):
             HerokuEventTypesEnum.Destroy,
             HerokuEventTypesEnum.Update,
         ),
-        HerokuEntitiesEnum.Release.value: (
+        HerokuEntitiesEnum.Release: (
             HerokuEventTypesEnum.Create,
             HerokuEventTypesEnum.Update,
         ),
