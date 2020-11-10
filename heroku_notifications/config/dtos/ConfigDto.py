@@ -1,16 +1,16 @@
 from typing import Dict, List, Union
 
-from pydantic import BaseModel, root_validator, validator, conlist
+from pydantic import BaseModel, root_validator, validator, conlist, constr
 
 from ..models import NotificationConfig
 
 
 class ProviderDto(BaseModel):
-    provider: str
+    name: str
     args: Dict[str, Union[str, int]] = None
 
 
-class Entity(BaseModel):
+class EntityDto(BaseModel):
     name: NotificationConfig.HerokuEntitiesEnum
     events: conlist(NotificationConfig.HerokuEventTypesEnum, min_items=1)
 
@@ -36,9 +36,10 @@ class Entity(BaseModel):
 
 
 class WebhookDto(BaseModel):
-    name: str
+    name: constr(max_length=NotificationConfig.NAME_MAX_LENGTH)
     provider: str
-    entities: conlist(Entity, min_items=1)
+    secret: constr(min_length=8, max_length=NotificationConfig.SECRET_MAX_LENGTH)
+    entities: conlist(EntityDto, min_items=1)
 
 
 class ConfigDto(BaseModel):
@@ -56,6 +57,7 @@ class ConfigDto(BaseModel):
             "webhooks": [
                 {
                     "name": "test",
+                    "secret": "secret key",
                     "provider": "TelegramProvider",
                     "entities": [
                         {

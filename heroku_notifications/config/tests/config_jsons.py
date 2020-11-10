@@ -2,7 +2,7 @@ valid_cases = {
     'full': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
                 "args": {
                     "chat_id": 123123
                 }
@@ -11,6 +11,7 @@ valid_cases = {
         "webhooks": [
             {
                 "name": "test",
+                "secret": "secret key",
                 "provider": "TelegramProvider",
                 "entities": [
                     {
@@ -48,12 +49,13 @@ valid_cases = {
     'without several entities': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
             }
         },
         "webhooks": [
             {
                 "name": "test",
+                "secret": "secret key",
                 "provider": "TelegramProvider",
                 "entities": [
                     {
@@ -67,12 +69,13 @@ valid_cases = {
     'without several events': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
             }
         },
         "webhooks": [
             {
                 "name": "test",
+                "secret": "secret key",
                 "provider": "TelegramProvider",
                 "entities": [
                     {
@@ -95,7 +98,7 @@ invalid_cases = {
     'unspecified provider': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
                 "args": {
                     "chat_id": 123123
                 }
@@ -104,6 +107,7 @@ invalid_cases = {
         "webhooks": [
             {
                 "name": "test",
+                "secret": "secret key",
                 "provider": "UnknownProvider",
                 "entities": [
                     {
@@ -117,7 +121,7 @@ invalid_cases = {
     'invalid entity name': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
                 "args": {
                     "chat_id": 123123
                 }
@@ -125,6 +129,8 @@ invalid_cases = {
         },
         "webhooks": [
             {
+                "name": "test",
+                "secret": "secret key",
                 "provider": "TelegramProvider",
                 "entities": [
                     {
@@ -138,7 +144,7 @@ invalid_cases = {
     'invalid event name': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
                 "args": {
                     "chat_id": 123123
                 }
@@ -146,6 +152,8 @@ invalid_cases = {
         },
         "webhooks": [
             {
+                "name": "test",
+                "secret": "secret key",
                 "provider": "TelegramProvider",
                 "entities": [
                     {
@@ -159,7 +167,7 @@ invalid_cases = {
     'prohibited event name': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
                 "args": {
                     "chat_id": 123123
                 }
@@ -167,6 +175,8 @@ invalid_cases = {
         },
         "webhooks": [
             {
+                "name": "test",
+                "secret": "secret key",
                 "provider": "TelegramProvider",
                 "entities": [
                     {
@@ -180,7 +190,7 @@ invalid_cases = {
     'empty entities': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
                 "args": {
                     "chat_id": 123123
                 }
@@ -188,6 +198,8 @@ invalid_cases = {
         },
         "webhooks": [
             {
+                "name": "test",
+                "secret": "secret key",
                 "provider": "TelegramProvider",
                 "entities": []
             }
@@ -196,7 +208,7 @@ invalid_cases = {
     'empty events': {
         "providers": {
             "TelegramProvider": {
-                "provider": "Telegram",
+                "name": "Telegram",
                 "args": {
                     "chat_id": 123123
                 }
@@ -204,6 +216,52 @@ invalid_cases = {
         },
         "webhooks": [
             {
+                "name": "test",
+                "secret": "secret key",
+                "provider": "TelegramProvider",
+                "entities": [
+                    {
+                        'name': "api:build",
+                        'events': [],
+                    }
+                ]
+            }
+        ]
+    },
+    'no name provided': {
+        "providers": {
+            "TelegramProvider": {
+                "name": "Telegram",
+                "args": {
+                    "chat_id": 123123
+                }
+            }
+        },
+        "webhooks": [
+            {
+                "secret": "secret key",
+                "provider": "TelegramProvider",
+                "entities": [
+                    {
+                        'name': "api:build",
+                        'events': [],
+                    }
+                ]
+            }
+        ]
+    },
+    'no secret provided': {
+        "providers": {
+            "TelegramProvider": {
+                "name": "Telegram",
+                "args": {
+                    "chat_id": 123123
+                }
+            }
+        },
+        "webhooks": [
+            {
+                "name": "test",
                 "provider": "TelegramProvider",
                 "entities": [
                     {

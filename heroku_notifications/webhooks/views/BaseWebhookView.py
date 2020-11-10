@@ -4,16 +4,14 @@ import hmac
 import json
 import logging
 
-from http import HTTPStatus
 from uuid import UUID
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponseNotFound
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
 
 from heroku_notifications.config.models import NotificationConfig
-from .responses import HttpResponseUnauthorized, HttpResponseAccepted
+from heroku_notifications.common.responses import HttpResponseUnauthorized, HttpResponseAccepted
 from ..exceptions import SecretMismatchException
 
 logger = logging.getLogger(__name__)
@@ -22,7 +20,6 @@ logger = logging.getLogger(__name__)
 class BaseWebhookView(View):
     HEROKU_SECRET_HEADER_NAME = 'Heroku-Webhook-Hmac-SHA256'
 
-    @csrf_exempt
     def dispatch(self, request, config_id: UUID, *args, **kwargs):
         heroku_secret = request.headers.get(self.HEROKU_SECRET_HEADER_NAME, '')
 
@@ -41,7 +38,7 @@ class BaseWebhookView(View):
 
     def post(self, request: WSGIRequest, notification_config: NotificationConfig, **kwargs):
         self._handle_request(notification_config=notification_config, data=json.loads(request.body))
-        return HttpResponseAccepted(status=HTTPStatus.ACCEPTED.value)
+        return HttpResponseAccepted()
 
     def _handle_request(self, notification_config: NotificationConfig, data: dict):
         logger.debug(f'{notification_config}. Data: {data}')
