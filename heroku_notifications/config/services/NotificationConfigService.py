@@ -4,6 +4,7 @@ from uuid import UUID
 from django.db import transaction
 
 from ..dtos import ConfigDto
+from ..exceptions import ConfigException
 from ..models import NotificationConfig
 
 
@@ -25,3 +26,22 @@ class NotificationConfigService:
             created_configs[notification_config.name] = notification_config.pk
 
         return created_configs
+
+    @classmethod
+    def delete(cls, config_id: UUID, secret: str):
+        try:
+            config = NotificationConfig.objects.get(pk=config_id, secret=secret).delete()
+        except NotificationConfig.DoesNotExist as e:
+            raise cls.NotFoundException from e
+
+    @classmethod
+    def update(cls, config_id: UUID, secret: str, update_data):
+        try:
+            config = NotificationConfig.objects.get(pk=config_id, secret=secret)
+        except NotificationConfig.DoesNotExist as e:
+            raise cls.NotFoundException from e
+
+        # TODO: do update.
+
+    class NotFoundException(ConfigException):
+        pass

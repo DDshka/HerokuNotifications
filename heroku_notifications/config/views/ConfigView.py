@@ -12,6 +12,8 @@ from ..services import NotificationConfigService
 
 
 class ConfigView(View):
+    SECRET_HEADER_NAME = 'Secret'
+
     def post(self, request: WSGIRequest):
         data = json.loads(request.body)
 
@@ -24,4 +26,21 @@ class ConfigView(View):
         return HttpResponseAccepted(content=json.dumps(configs, cls=DjangoJSONEncoder))
 
     def put(self, request: WSGIRequest, config_id: UUID):
-        pass
+        secret = request.headers.get(self.SECRET_HEADER_NAME)
+        try:
+            NotificationConfigService.update(config_id, secret, {})
+        except NotificationConfigService.NotFoundException:
+            return HttpResponseBadRequest(
+                content='Configuration with provided ID does not exist '
+                        'or you have provided wrong secret.'
+            )
+
+    def delete(self, request: WSGIRequest, config_id: UUID):
+        secret = request.headers.get(self.SECRET_HEADER_NAME)
+        try:
+            NotificationConfigService.delete(config_id, secret)
+        except NotificationConfigService.NotFoundException:
+            return HttpResponseBadRequest(
+                content='Configuration with provided ID does not exist '
+                        'or you have provided wrong secret.'
+            )
