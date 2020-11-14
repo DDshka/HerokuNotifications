@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'heroku_notifications.config',
     'heroku_notifications.healthcheck',
     'heroku_notifications.webhooks',
+    'heroku_notifications.providers.telegram'
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,5 @@ LOGGING = {
         }
     },
 }
+
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')

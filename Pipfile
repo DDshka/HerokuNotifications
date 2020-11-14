@@ -12,6 +12,7 @@ dj-database-url = "*"
 psycopg2 = "*"
 pydantic = "*"
 requests = "*"
+python-telegram-bot = "*"
 
 [requires]
 python_version = "3.8"
