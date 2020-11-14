@@ -26,7 +26,7 @@ class NotificationConfig(UUIDModel):
         Destroy = 'destroy'
 
     class ProvidersEnum(ChoiceEnum):
-        pass
+        Telegram = 'Telegram'
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     provider_name = models.CharField(max_length=128, choices=ProvidersEnum.to_choices())

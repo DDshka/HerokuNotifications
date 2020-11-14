@@ -1,0 +1,1 @@
+default_app_config = 'heroku_notifications.providers.telegram.apps.Config'

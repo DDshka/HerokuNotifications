@@ -12,8 +12,8 @@ from django.views.generic.base import View
 
 from heroku_notifications.config.models import NotificationConfig
 from heroku_notifications.common.responses import HttpResponseUnauthorized, HttpResponseAccepted
+from heroku_notifications.providers.registry import ProviderRegistry
 from ..exceptions import SecretMismatchException
-from heroku_notifications.providers.telegram.provider import TelegramProvider
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,8 @@ class WebhookView(View):
 
     def _handle_request(self, notification_config: NotificationConfig, data: dict):
         logger.debug(f'{notification_config}. Data: {data}')
-        TelegramProvider().send_notification(notification_config, data)
+        provider = ProviderRegistry.get_provider(notification_config.provider_name)
+        provider.send_notification(notification_config, data)
 
     def _check_heroku_secret(self, given_secret: str, data: bytes, notification_config: NotificationConfig):
         calculated_secret = hmac.new(key=notification_config.secret.encode(), msg=data, digestmod=hashlib.sha256).digest()
