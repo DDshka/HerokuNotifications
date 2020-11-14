@@ -1,0 +1,11 @@
+version: "3"
+services:
+    heroku_notifications_db:
+        image: postgres
+        container_name: "heroku_notifications_db"
+        environment:
+            POSTGRES_DB: "heroku_notifications_db"
+            POSTGRES_USER: "hn"
+            POSTGRES_PASSWORD: "hn"
+        ports:
+            - "5450:5432"
