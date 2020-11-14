@@ -1,1 +1,1 @@
-from .BaseWebhookView import BaseWebhookView
+from .WebhookView import WebhookView

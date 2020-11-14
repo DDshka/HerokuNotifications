@@ -17,7 +17,7 @@ from ..exceptions import SecretMismatchException
 logger = logging.getLogger(__name__)
 
 
-class BaseWebhookView(View):
+class WebhookView(View):
     HEROKU_SECRET_HEADER_NAME = 'Heroku-Webhook-Hmac-SHA256'
 
     def dispatch(self, request, *args, **kwargs):

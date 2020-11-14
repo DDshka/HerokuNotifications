@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import BaseWebhookView
+from .views import WebhookView
 
 urlpatterns = [
-    path('<uuid:config_id>', BaseWebhookView.as_view()),
+    path('<uuid:config_id>', WebhookView.as_view()),
 ]

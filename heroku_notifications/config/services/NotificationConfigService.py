@@ -30,7 +30,7 @@ class NotificationConfigService:
     @classmethod
     def delete(cls, config_id: UUID, secret: str):
         try:
-            config = NotificationConfig.objects.get(pk=config_id, secret=secret).delete()
+            NotificationConfig.objects.get(pk=config_id, secret=secret).delete()
         except NotificationConfig.DoesNotExist as e:
             raise cls.NotFoundException from e
 
