@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Dict, Union
 
 from pydantic import BaseModel, root_validator, validator, conlist, constr
 
@@ -10,36 +10,17 @@ class ProviderDto(BaseModel):
     args: Dict[str, Union[str, int]] = None
 
 
-class EntityDto(BaseModel):
-    name: NotificationConfig.HerokuEntitiesEnum
-    events: conlist(NotificationConfig.HerokuEventTypesEnum, min_items=1)
-
-    @validator('events', pre=True, always=True)
-    def remove_duplicates(cls, events: List[str]):
-        return list(set(events))
-
-    @validator('events', each_item=True)
-    def validate_events(cls, event: NotificationConfig.HerokuEventTypesEnum, values, **kwargs):
-        entity_name = values.get('name')
-        if not entity_name:
-            return event
-
-        possible_events = NotificationConfig.HerokuEntitiesToEventsMapping.get(entity_name)
-        if event not in possible_events:
-            possible_events_names_str = ', '.join(event.value for event in possible_events)
-            raise ValueError(
-                f'Unexpected entity type ({event}) specified. '
-                f'Allowed options are: {possible_events_names_str}'
-            )
-
-        return event
-
-
 class WebhookDto(BaseModel):
     name: constr(max_length=NotificationConfig.NAME_MAX_LENGTH)
     provider: str
     secret: constr(min_length=8, max_length=NotificationConfig.SECRET_MAX_LENGTH)
-    entities: conlist(EntityDto, min_items=1)
+    entities: conlist(NotificationConfig.HerokuEntitiesEnum, min_items=1)
+
+    @validator('name', always=True)
+    def validate_name(cls, name: str, **kwargs):
+        if NotificationConfig.objects.filter(name__iexact=name).exists():
+            raise ValueError(f'Webhook configuration with name "{name}" already exists.')
+        return name
 
 
 class ConfigDto(BaseModel):
@@ -48,7 +29,7 @@ class ConfigDto(BaseModel):
         {
             "providers": {
                 "TelegramProvider": {
-                    "provider": "Telegram",
+                    "name": "Telegram",
                     "args": {
                         "chat_id": 123123
                     }
@@ -60,34 +41,13 @@ class ConfigDto(BaseModel):
                     "secret": "secret key",
                     "provider": "TelegramProvider",
                     "entities": [
-                        {
-                            'name': "api:build",
-                            'events': ["create", "update"],
-                        },
-                        {
-                            'name': "api:addon-attachment",
-                            'events': ["create", "update"],
-                        },
-                        {
-                            'name': "api:addon",
-                            'events': ["create", "destroy", "update"],
-                        },
-                        {
-                            'name': "api:app",
-                            'events': ["create", "destroy", "update"],
-                        },
-                        {
-                            'name': "api:dyno",
-                            'events': ["create"],
-                        },
-                        {
-                            'name': "api:formation",
-                            'events': ["destroy", "update"],
-                        },
-                        {
-                            'name': "api:release",
-                            'events': ["create", "update"],
-                        },
+                        "api:build",
+                        "api:addon-attachment",
+                        "api:addon",
+                        "api:app",
+                        "api:dyno",
+                        "api:formation",
+                        "api:release",
                     ]
                 }
             ]

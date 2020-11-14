@@ -20,7 +20,7 @@ class NotificationConfigService:
                 provider_name=provider.name,
                 provider_args=provider.args,
                 secret=webhook.secret,
-                _entities=[entity.json() for entity in webhook.entities],
+                entities=webhook.entities,
             )
             created_configs[notification_config.name] = notification_config.pk
 

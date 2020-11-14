@@ -20,13 +20,14 @@ logger = logging.getLogger(__name__)
 class BaseWebhookView(View):
     HEROKU_SECRET_HEADER_NAME = 'Heroku-Webhook-Hmac-SHA256'
 
-    def dispatch(self, request, config_id: UUID, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         heroku_secret = request.headers.get(self.HEROKU_SECRET_HEADER_NAME, '')
 
         try:
             if not heroku_secret:
                 return HttpResponseUnauthorized(content=b'Secret token not provided.')
 
+            config_id: UUID = kwargs.get('config_id')
             notification_config = NotificationConfig.objects.get(pk=config_id)
             self._check_heroku_secret(heroku_secret, request.body, notification_config)
         except NotificationConfig.DoesNotExist:
