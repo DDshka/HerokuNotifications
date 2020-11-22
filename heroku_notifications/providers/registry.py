@@ -1,6 +1,7 @@
 from typing import Dict, Type
 
 from .base import BaseProvider
+from .telegram.provider import TelegramProvider
 
 
 class ProviderRegistry:
@@ -23,3 +24,6 @@ class ProviderRegistry:
             raise ValueError(f'No provider found for {provider_name}.')
 
         return provider()
+
+
+ProviderRegistry.register(TelegramProvider)

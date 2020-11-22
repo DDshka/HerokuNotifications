@@ -1,14 +1,10 @@
-import json
-
 from django.conf import settings
 from telegram.ext import Updater
 
 from heroku_notifications.config.models import NotificationConfig
-from ..base import BaseProvider
-from ..registry import ProviderRegistry
+from ..base import BaseProvider, Formatter
 
 
-@ProviderRegistry.register
 class TelegramProvider(BaseProvider):
     name = NotificationConfig.ProvidersEnum.Telegram.value
 
@@ -23,12 +19,4 @@ class TelegramProvider(BaseProvider):
             self.bot.send_message(chat_id=chat_id, text=self._get_message_from_data(data))
 
     def _get_message_from_data(self, heroku_data: dict):
-        resource: str = heroku_data['resource']
-        user_email: str = heroku_data['actor']['email']
-
-        data: dict = heroku_data['data']
-        application_name: str = data['app']['name']
-        status: str = data['status']
-
-        return f'{resource.capitalize()} {status} for {application_name}\n' \
-               f'Initiator: {user_email}.'
+        return Formatter(heroku_data).format()
